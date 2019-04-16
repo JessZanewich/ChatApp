@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h" />
+    <ClInclude Include="Event.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Server.h" />
   </ItemGroup>

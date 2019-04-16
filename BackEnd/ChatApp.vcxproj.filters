@@ -8,32 +8,23 @@
     <Filter Include="Server stuff">
       <UniqueIdentifier>{d48c8d33-6f68-4eb6-a02b-7a51d19e1b6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Precompiled header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Precompiled header</Filter>
-    </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>Server stuff</Filter>
     </ClInclude>
-    <ClInclude Include="Connection.h">
-      <Filter>Precompiled header</Filter>
-    </ClInclude>
+    <ClInclude Include="Connection.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Event.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChatApp.cpp">
       <Filter>Server stuff</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Precompiled header</Filter>
-    </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>Server stuff</Filter>
     </ClCompile>
     <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
 </Project>
