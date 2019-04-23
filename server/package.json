@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "chat-app-backend",
   "version": "1.0.0",
   "description": "",
   "main": "./build/main.js",
@@ -12,7 +12,7 @@
     "url": ""
   },
   "keywords": [],
-  "author": "Mike",
+  "author": "Mike Thiem",
   "license": "MIT",
   "dependencies": {
     "@types/chai": "^4.1.7",
