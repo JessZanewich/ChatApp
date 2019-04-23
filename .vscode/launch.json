@@ -44,7 +44,7 @@
             "name": "Launch Server with ts-node",
             "protocol": "inspector",
             "args": [
-                "${workspaceFolder}/main.ts"
+                "${workspaceFolder}/server/src/main.ts"
             ],
             "cwd": "${workspaceRoot}",
             "runtimeArgs": [
