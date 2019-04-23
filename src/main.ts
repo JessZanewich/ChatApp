@@ -18,12 +18,15 @@ async function main() {
         res.json('Hello this page exists now.');
     });
 
+    app.get('/send/:msg', (req, res) => {
+        res.json(req.params.msg);
+    });
+
     // Turn on the server
     let portToUse = process.env.PORT || 3000; // env var used by Heroku, ifndef then use port 3000
     app.listen(portToUse, () => {
         console.log(`Server is running on port ${portToUse}`);
     });
-    
 }
 
 main();
