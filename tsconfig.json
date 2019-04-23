@@ -8,7 +8,7 @@
         "allowSyntheticDefaultImports": true,
         "noErrorTruncation": true,
         "noUnusedLocals": true,
-        "target": "esnext",
+        "target": "es6",
         "outDir": "./build",
     },
     "typeAcquisition": {
