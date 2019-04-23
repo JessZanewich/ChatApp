@@ -5,7 +5,7 @@ import * as cors from 'cors';
 // import * as bcrypt from 'bcrypt-nodejs'; //! Don't need this yet
 // import * as knex from 'knex'; //! Don't need this yet
 
-import * as jsonfile from 'jsonfile';
+// import * as jsonfile from 'jsonfile';
 
 async function main() {
     // Configure the express server
@@ -22,3 +22,4 @@ async function main() {
 }
 
 main();
+console.log('HULLO');
