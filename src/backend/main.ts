@@ -9,7 +9,7 @@ import * as WebSocket from 'ws';
 // import * as jsonfile from 'jsonfile';
 
 // import {handleMessage} from './handlers';
-import {Message} from '../interfaces';
+import { Message } from '../interfaces';
 
 async function main() {
     // Configure the express server
@@ -20,9 +20,9 @@ async function main() {
     const server = http.createServer(app);
 
     // Initialize the WebSocket server instance
-    const wss = new WebSocket.Server({ server });
+    const webSocketServer = new WebSocket.Server({ server });
 
-    wss.on('connection', (ws: WebSocket) => {
+    webSocketServer.on('connection', (ws: WebSocket) => {
         // Connection established. Let's add simple event:
         ws.on('message', (message: string) => {
             const msg: Message = JSON.parse(message);
@@ -30,7 +30,7 @@ async function main() {
         });
 
         // Upon establishing the connection, immediately send a success message to the incoming connection
-        ws.send('Hi there, I am a websocket server');
+        ws.send("Connection Established.");
     });
 
     // Turn on the server
