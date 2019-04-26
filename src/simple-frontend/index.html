@@ -6,8 +6,15 @@
                     alert("WebSockets are supported by your browser :D");
 
                     var ws = new WebSocket("ws://localhost:8999");
+                    var testMessage = {
+                        "sender": "TestClient",
+                        "time": "2019-04-14T00:21:31+00:00",
+                        "content": "hullo",
+                        "chatroom": "general"
+                    }
+
                     ws.onopen = () => {
-                        ws.send("OH SHIT HERE I AM");
+                        ws.send(JSON.stringify(testMessage));
                         alert("message sent");
                     }
 
