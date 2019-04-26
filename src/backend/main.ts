@@ -26,11 +26,12 @@ async function main() {
         // Connection established. Let's add simple event:
         ws.on('message', (message: string) => {
             const msg: Message = JSON.parse(message);
-            ws.send(`Hello ${msg.sender}.`);
+            console.log('Received message: ' + msg + '\n');
+            ws.send(msg.sender + ' says:\n' + msg.content);
         });
 
         // Upon establishing the connection, immediately send a success message to the incoming connection
-        ws.send('Hi there, I am a websocket server');
+        ws.send('Hi there, I\'ll be your chatroom server today.');
     });
 
     // Turn on the server
