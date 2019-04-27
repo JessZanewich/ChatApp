@@ -27,8 +27,12 @@ async function main() {
         ws.on('message', (message: string) => {
             const msg: Message = JSON.parse(message);
             ws.send(`Hello ${msg.sender}.`);
-            console.log(`Client "${msg.sender}" says: ${msg.content}`);
+            console.log(`${msg.time}\t${msg.sender} to ${msg.chatroom}: ${msg.content}`);
         });
+
+        ws.on('close', (code, reason) => {
+            console.log(`Client disconnected: ${code} ${reason}`);
+        })
 
         // Upon establishing the connection, immediately send a success message to the incoming connection
         const connectionEstablished = "Connection Established";
