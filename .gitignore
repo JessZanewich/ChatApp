@@ -2,3 +2,4 @@
 **/node_modules/
 **/Debug/
 **/.vscode/ipch/
+/build/
