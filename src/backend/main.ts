@@ -26,12 +26,14 @@ async function main() {
         // Connection established. Let's add simple event:
         ws.on('message', (message: string) => {
             const msg: Message = JSON.parse(message);
-            console.log('Received message: ' + msg + '\n');
-            ws.send(msg.sender + ' says:\n' + msg.content);
+            ws.send(`Hello ${msg.sender}.`);
+            console.log(`Client "${msg.sender}" says: ${msg.content}`);
         });
 
         // Upon establishing the connection, immediately send a success message to the incoming connection
-        ws.send('Hi there, I\'ll be your chatroom server today.');
+        const connectionEstablished = "Connection Established";
+        console.log(connectionEstablished);
+        ws.send(connectionEstablished);
     });
 
     // Turn on the server
