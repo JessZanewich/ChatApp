@@ -6,11 +6,8 @@ import * as chai from 'chai';
 chai.use(require('chai-as-promised')); // Extension that defines the "eventually" keyword
 chai.use(require('chai-string')); // Extension that provides the "string should contain" functionality
 
-// Testing dependencies/helpers/units under test
-import { ChatAppServer } from '../backend/ChatAppServer';
-import { MockClient } from './MockClient'
-import { isMessage } from '../typeguards'
-import { IMessage } from '../interfaces';
+import { isMessage } from '../../typeguards'
+import { IMessage } from '../../interfaces';
 
 describe('TypeGuards', () => {
     
@@ -54,21 +51,4 @@ describe('TypeGuards', () => {
             expect(isMessage(msg)).to.equal(false);
         });
     });
-});
-
-describe('Single Client Tests', () => {
-    const portNumber = 8999;
-    server: ChatAppServer;
-    client: MockClient;
-
-    before(() => {
-        this.server = new ChatAppServer(portNumber);
-        this.server.Activate();
-        this.client = new MockClient(`ws://localhost:${portNumber}`);
-    });
-
-    it('Client Can Connect', () => {
-        expect(this.client.isConnected()).to.equal(true);
-    });
-
 });
