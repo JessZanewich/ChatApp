@@ -2,7 +2,8 @@ import * as http from 'http';
 import * as express from 'express';
 import { IMessage } from '../interfaces';
 import * as WebSocket from 'ws';
-
+import { isMessage } from '../typeguards';
+import { ServerStatusMessages } from '../constants'
 
 export class ChatAppServer {
     server: http.Server;
@@ -11,7 +12,6 @@ export class ChatAppServer {
     constructor(portNumber: number) {
         // Configure the express server
         this.app = express();
-        // app.use(bodyParser.json());
 
         // Initialize the WebSocket server instance
         const server = http.createServer(this.app);
@@ -22,6 +22,11 @@ export class ChatAppServer {
             // Connection established. Let's add simple event:
             ws.on('message', (message: string) => {
                 const msg: IMessage = JSON.parse(message);
+                if (!isMessage(msg)) {
+                    ws.send(ServerStatusMessages.invalidMessageReceived);
+                    console.log(ServerStatusMessages.invalidMessageReceived);
+                    return;
+                }
                 ws.send(`Hello ${msg.sender}.`);
                 console.log(`${msg.time}\t${msg.sender} to ${msg.chatroom}: ${msg.content}`);
             });
@@ -31,9 +36,8 @@ export class ChatAppServer {
             })
 
             // Upon establishing the connection, immediately send a success message to the incoming connection
-            const connectionEstablished = "Connection Established";
-            console.log(connectionEstablished);
-            ws.send(connectionEstablished);
+            console.log(ServerStatusMessages.connectionEstablished);
+            ws.send(ServerStatusMessages.connectionEstablished);
         });
     }
 
