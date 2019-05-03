@@ -18,4 +18,4 @@ Note: if the server crashes in the debugger or is manually restarted that will b
 * [Material-UI](https://material-ui.com/)
     * [Google Material React Components](https://github.com/material-components/material-components-web-react)
     * [Textbox Demo](https://material-components.github.io/material-components-web-catalog/#/component/text-field?icons=&type=outlined)
-* 
+* [Smart Websocket Client Chrome Extension](https://chrome.google.com/webstore/detail/smart-websocket-client/omalebghpgejjiaoknljcfmglgbpocdp)
