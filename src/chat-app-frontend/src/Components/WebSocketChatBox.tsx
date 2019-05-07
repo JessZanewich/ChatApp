@@ -57,6 +57,12 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 		console.log(this.state.clientMessage);
 	}
 
+	onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if(event.keyCode === 13) {
+			this.onClickSend();
+		}
+	}
+
 	onClickSend = () => {
 		if (this.state.clientMessage.length === 0) {
 			alert("No blank messages.");
@@ -91,7 +97,8 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 				>
 					<Input
 						value={this.state.clientMessage}
-						onChange={this.onInputChange} />
+						onChange={this.onInputChange}
+						onKeyDown={this.onKeyDown} />
 				</TextField>
 				
 				<Button
