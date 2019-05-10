@@ -14,8 +14,31 @@ Before starting, make sure you have the Smart Websocket Client (SWC) extension i
 
 Note: if the server crashes in the debugger or is manually restarted that will break the WebSocket connection with the client, so for now you'll need to manually refresh the browser which will re-establish the connection.
 
-## Resources
+
+## Order of operations when client and server connect
+This is the ideal order of operations, we should really flow chart out all the possibilities so we know what cases we have to handle. State machine diagram would be helpful.
+
+1. Server is instantiated
+1. Server starts listening via `server.Activate()`
+1. Server wires up all websocket event handlers (onMessage etc)
+1. Client connects - (server gives a 10s window for the client to introduce before it shuts the connection down)
+1. Client and Server each wire up their onMessage handlers
+1. Client sends introduction message
+1. Server receives introduction message and either:
+    * If client already exists: server tell client "Here's a list of all the messages you missed while offline"
+    * If client is new: server tells client "you are now a member of "general" chatroom"
+
+
+when server receives a message from that client that identifies itself it exits the "waitingForIdentification" state and enters the "open" state
+
+## Edge cases we may need to handle
+|What if?|Sub-scenarios|Notes|
+|-|-|-|
+|What if a malicious client introduces itself as another client?| What if that client is currently online (easy to detect) vs current offline (harder)?|We should probably handle this via the eventual authentication system. Once they're authenticated, we will always know who they are.|
+
+## Developer Resources
 * [Material-UI](https://material-ui.com/)
     * [Google Material React Components](https://github.com/material-components/material-components-web-react)
     * [Textbox Demo](https://material-components.github.io/material-components-web-catalog/#/component/text-field?icons=&type=outlined)
 * [Smart Websocket Client Chrome Extension](https://chrome.google.com/webstore/detail/smart-websocket-client/omalebghpgejjiaoknljcfmglgbpocdp)
+* [big-integer library](https://www.npmjs.com/package/big-integer)

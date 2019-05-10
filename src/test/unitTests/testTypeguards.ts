@@ -7,7 +7,7 @@ chai.use(require('chai-as-promised')); // Extension that defines the "eventually
 chai.use(require('chai-string')); // Extension that provides the "string should contain" functionality
 
 import { isMessage } from '../../typeguards'
-import { IMessage } from '../../interfaces';
+import { IBaseMessage } from '../../interfaces';
 
 describe('TypeGuards', () => {
     
@@ -21,11 +21,10 @@ describe('TypeGuards', () => {
         });
 
         it('Is, when obj is explicitly of interface type', () => {
-            const msg: IMessage = {
-                sender: "stuff",
-                chatroom: "general",
-                content: "would'nt you like to know",
-                time: new Date()
+            //? Does this make sense anymore?
+            const msg: IBaseMessage = {
+                messageType: "baseMessage",
+                clientId: BigInt(0)
             }
             expect(isMessage(msg)).to.equal(true);
         });
@@ -34,19 +33,19 @@ describe('TypeGuards', () => {
             const msg = {
                 sender: "stuff",
                 chatroom: "general",
-                content: "would'nt you like to know",
+                content: "wouldn't you like to know",
                 time: new Date()
             }
             expect(isMessage(msg)).to.equal(true);
         });
             
-        it('Is NOT, when obj has all required fields but also extra fields', () => {
+        it("Is NOT, when obj has all required fields but also extra fields (that aren't defined on subtypes)", () => {
             const msg = {
                 sender: "stuff",
                 chatroom: "general",
-                content: "would'nt you like to know",
+                content: "wouldn't you like to know",
                 time: new Date(),
-                extra: 'more'
+                extraFieldThatIsNotDefinedOnTheClass: 'iAmAnExtraField'
             }
             expect(isMessage(msg)).to.equal(false);
         });

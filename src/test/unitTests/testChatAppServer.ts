@@ -27,16 +27,6 @@ describe('Single Client Tests', () => {
 
     it('Server recognizes when client has connected', () => {
         expect(this.server.numConnectedClients).to.equal(1);
-    })
-
-});
-
-describe('Multi Client Tests', () => {
-    before(() => {
-        //Set up tests
     });
 
-    it('does it all spectacularly', () => {
-        expect()
-    });
 });
