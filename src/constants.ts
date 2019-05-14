@@ -6,7 +6,9 @@ export const ServerStatusMessages = {
 }
 
 export const MockClientIntroductionMessage: IClientIntroductionMessage = {
-    clientId: BigInt(0),
+    clientId: 0,
     messageType: "clientIntro",
-    previousMessageId: BigInt(0)
+    previousMessageId: 0
 }
+
+export const defaultChatroomName = "general";
