@@ -14,7 +14,7 @@
                 "--require", "ts-node/register",
                 "--timeout", "999999",
                 "--colors", "--recursive",
-                "${workspaceFolder}/src/test/unitTests/*.ts",
+                "${workspaceFolder}/src/test/**/*.ts",
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
