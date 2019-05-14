@@ -2,21 +2,21 @@ export type IMessageType = "clientIntro" | "chatMessage" | "joinLeaveRequest" | 
 
 export interface IBaseMessage {
     messageType: IMessageType;
-    clientId: number; // TODO think of how this is a bad idea and then do something else
+    clientId: number; // TODO think of how this is a bad idea and then do something else    
 }
 
-export interface IClientMessage extends IBaseMessage {
-    previousMessageId: bigint;
+export interface IFromClientMessage extends IBaseMessage {
+    previousMessageId: number;
 }
 
-export interface IClientChatMessage extends IClientMessage {
+export interface IFromClientChatMessage extends IFromClientMessage {
     messageType: "chatMessage";
     content: string; // string for the message content. should be sanitized by client before sending
     chatroom: string; // GUID for chat room
 }
 
 // Should never be sent or received
-export interface ITimestampedClientMessage extends IClientMessage {
+export interface ITimestampedClientMessage extends IFromClientMessage {
     time: Date;
 }
 
@@ -27,7 +27,7 @@ export interface IClientJoinLeaveRequest extends IBaseMessage {
 }
 
 // Sent by client immediately upon connecting to server
-export interface IClientIntroductionMessage extends IClientMessage {
+export interface IClientIntroductionMessage extends IFromClientMessage {
     messageType: "clientIntro";
 }
 
@@ -38,14 +38,14 @@ export interface IServerRegistrationMessage extends IBaseMessage {
 }
 
 // Broadcast by server to each client in a given chatroom
-export interface IServerChatMessage extends IBaseMessage {
+export interface IFromServerChatMessage extends IBaseMessage {
     messageType: "serverChatMessage";
-    messageId: bigint;
+    messageId: number;
     chatroom: string;
     serverTimestamp: Date;
     content: string;
 }
 
 export interface IServerBroadcastMissedMessages {
-    missedMessages: IServerChatMessage[];
+    missedMessages: IFromServerChatMessage[];
 }
