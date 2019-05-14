@@ -2,7 +2,7 @@ export type IMessageType = "clientIntro" | "chatMessage" | "joinLeaveRequest" | 
 
 export interface IBaseMessage {
     messageType: IMessageType;
-    clientId: number; // TODO think of how this is a bad idea and then do something else    
+    clientId: number;
 }
 
 export interface IFromClientMessage extends IBaseMessage {
@@ -44,8 +44,12 @@ export interface IFromServerChatMessage extends IBaseMessage {
     chatroom: string;
     serverTimestamp: Date;
     content: string;
+    username: string;
 }
 
 export interface IServerBroadcastMissedMessages {
     missedMessages: IFromServerChatMessage[];
 }
+
+export type clientId = number;
+export type chatroomName = string;
