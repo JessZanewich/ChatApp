@@ -10,6 +10,6 @@ export class InvalidMessageError extends Error {
     constructor(invalidMessageType: string) {
         super();
         this.name = "Invalid message error",
-        this.message = `Invalid message type "${}`
+        this.message = `Invalid message type: "${invalidMessageType}"`
     }
 }
