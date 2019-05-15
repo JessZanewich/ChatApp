@@ -3,7 +3,7 @@ import * as express from 'express';
 import { IBaseMessage, IClientIntroductionMessage, IClientJoinLeaveRequest, IServerRegistrationMessage, IFromClientChatMessage, IFromServerChatMessage, clientId, chatroomName } from '../interfaces';
 import * as wsWebSocket from 'ws';
 import { isBaseMessage } from '../typeguards';
-import { ServerStatusMessages, defaultChatroomName } from '../constants'
+import { ServerStatusMessages } from '../constants'
 import { NotImplementedError, InvalidMessageError } from '../errors';
 import { Client } from './Client';
 import { Chatroom } from './Chatroom';
@@ -27,7 +27,7 @@ export class ChatAppServer {
         this.clients = new Map<clientId, Client>();
         this.numClients = 0;
         this.chatrooms = new Map<string, Chatroom>();
-        this.chatrooms[defaultChatroomName] = new Chatroom(defaultChatroomName);
+        this.chatrooms.set("general", new Chatroom("general"));
         
         // webSocketServer.on('connection', this.handleConnection);
         

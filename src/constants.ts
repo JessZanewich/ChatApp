@@ -10,5 +10,3 @@ export const MockClientIntroductionMessage: IClientIntroductionMessage = {
     messageType: "clientIntro",
     previousMessageId: 0
 }
-
-export const defaultChatroomName = "general";
