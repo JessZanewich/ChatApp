@@ -29,7 +29,42 @@ export class ChatAppServer {
         this.chatrooms = new Map<string, Chatroom>();
         this.chatrooms[defaultChatroomName] = new Chatroom(defaultChatroomName);
         
-        webSocketServer.on('connection', this.handleConnection);
+        // webSocketServer.on('connection', this.handleConnection);
+        
+        webSocketServer.on('connection', (ws: wsWebSocket) => {
+            console.log(`Server: incoming connection!`);
+        
+            ws.on('close', (code, reason) => {
+                // dissociate client ID and ws (by deleting the ws value associated with the clientId key in the map)
+                console.log(`Client disconnected: ${code} reason = '${reason}'`);
+            });
+
+            // wait for client intro
+            ws.on('message', (rawMsg: string) => {
+                // TODO close any old connections with the same client ID 
+                //      OR reject new connection and preserve old one
+                // TODO add error flow that closes the connection, if null id e.g.
+                const msg = JSON.parse(rawMsg) as IClientIntroductionMessage;
+
+                let regMsg: IServerRegistrationMessage = {
+                    clientId: msg.clientId,
+                    chatrooms: Array.from(this.chatrooms.keys()), // For now, just subscribe them to all the chatrooms
+                    messageType: "registration"
+                }
+
+                if (msg.clientId == 0) {
+                    // Client doesn't have an ID so we must assign it one (which was already created at onConnection time)
+                    const thisClientId = this.numClients++;
+                    regMsg.clientId = thisClientId;
+                }
+
+                console.log(`Received ${msg.messageType} message from clientId ${msg.clientId}. Prev message Id = ${msg.previousMessageId}`);
+                
+                ws.send(JSON.stringify(regMsg));
+                this.clients[msg.clientId] = new Client(ws);
+                ws.on('message', this.handleRawMessage);
+            });
+        });
     }
 
     async activate() {
@@ -40,49 +75,8 @@ export class ChatAppServer {
         
     }
 
-    handleConnection(ws: wsWebSocket) {
-        console.log(`Server: incoming connection!`);
-        
-        ws.on('close', (code, reason) => {
-            // dissociate client ID and ws (by deleting the ws value associated with the clientId key in the map)
-            console.log(`Client disconnected: ${code} reason = '${reason}'`);
-        });
-
-        // wait for client intro
-        ws.on('message', (msg: IClientIntroductionMessage, ws: wsWebSocket) => {
-            // TODO close any old connections with the same client ID 
-            //      OR reject new connection and preserve old one
-            // TODO add error flow that closes the connection, if null id e.g.
-            
-            let regMsg: IServerRegistrationMessage = {
-                clientId: msg.clientId,
-                chatrooms: Array.from(this.chatrooms.keys()), // For now, just subscribe them to all the chatrooms
-                messageType: "registration"
-            }
-
-            if (msg.clientId == 0) {
-                // Client doesn't have an ID so we must assign it one (which was already created at onConnection time)
-                const thisClientId = this.numClients++;
-                regMsg.clientId = thisClientId;
-            }
-            
-            ws.send(regMsg);
-            this.clients[msg.clientId] = new Client(ws);
-            ws.on('message', this.handleRawMessage);
-        });
-        
-        // check if client intro contained a non-zero client ID
-            // if so generate a new one
-            // if not, look it up
-        // save this ws for later, associate it with the client ID now that we know it
-
-        //! WRONG
-        // const thisClientId = this.numClients++;
-        // this.clientWebsockets[thisClientId] = ws;
-    }
-
     handleRawMessage = (rawMsg: wsWebSocket.Data, ws: wsWebSocket) => {
-        const msg: IBaseMessage = rawMsg.valueOf() as IBaseMessage;
+        const msg: IBaseMessage = JSON.parse(rawMsg.valueOf().toString()) as IBaseMessage;
 
         if (msg.clientId == 0) {
             // new client, needs an ID assigned
@@ -109,11 +103,10 @@ export class ChatAppServer {
         }
 
         if (!isBaseMessage(msg)) {
-            ws.send(ServerStatusMessages.invalidMessageReceived);
+            ws.send(JSON.stringify(ServerStatusMessages.invalidMessageReceived));
             console.log(ServerStatusMessages.invalidMessageReceived);
             return;
         }
-        ws.send(`Hello ${msg.clientId}.`);
         // console.log(`${msg.time}\t${msg.clientId} to ${msg.chatroom}: ${msg.content}`);
     }
 
@@ -130,7 +123,7 @@ export class ChatAppServer {
             messageId: this.chatrooms.get(msg.chatroom).getLastMessageId(),
             serverTimestamp: new Date()
         }
-        ws.send(echoMsg);
+        ws.send(JSON.stringify(echoMsg));
     }
     // handleClientIntroMessage
 
