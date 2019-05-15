@@ -36,7 +36,8 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 			//! This is a terrible inefficient way to setState because it copies the entire message history (plus all other properties of state) every time a new message comes in.
 			// TODO figure out a more efficient way to do this setState.
 			let newState = {...previousState};
-			newState.receivedMessageHistory += event.data;
+			const parsedMsg = JSON.parse(event.data) as IFromServerChatMessage;
+			newState.receivedMessageHistory.push(parsedMsg);
 			return newState;
 		});
 
