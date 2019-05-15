@@ -62,7 +62,40 @@ export class ChatAppServer {
                 
                 ws.send(JSON.stringify(regMsg));
                 this.clients[msg.clientId] = new Client(ws);
-                ws.on('message', this.handleRawMessage);
+                ws.on('message', (rawMsg: wsWebSocket.Data) => {
+                    const msg: IBaseMessage = JSON.parse(rawMsg.valueOf().toString()) as IBaseMessage;
+
+                    if (msg.clientId == 0) {
+                        // new client, needs an ID assigned
+                    }
+
+                    // TODO add validation that the message type is actually what it claims to be.
+                    // TODO add handling of null fields - typeguards only handle undefined (i.e. structure)
+                    switch (msg.messageType) {
+                        case "chatMessage":
+                            this.handleChatMessage(msg as IFromClientChatMessage, ws);
+                            break;
+                        case "clientIntro":
+                            // TODO think of how we want to handle this.
+                            throw new Error("This client has already introduced itself");
+                        case "joinLeaveRequest":
+                            this.handleJoinLeaveRequest(msg as IClientJoinLeaveRequest);
+                            break;
+                        case "registration":
+                        case "baseMessage":
+                        case "serverChatMessage":
+                            throw new Error(`Invalid Message Type ${msg.messageType}`);
+                        default:
+                            throw new InvalidMessageError(msg.messageType);
+                    }
+
+                    if (!isBaseMessage(msg)) {
+                        ws.send(JSON.stringify(ServerStatusMessages.invalidMessageReceived));
+                        console.log(ServerStatusMessages.invalidMessageReceived);
+                        return;
+                    }
+                    // console.log(`${msg.time}\t${msg.clientId} to ${msg.chatroom}: ${msg.content}`);
+                });
             });
         });
     }
@@ -75,52 +108,18 @@ export class ChatAppServer {
         
     }
 
-    handleRawMessage = (rawMsg: wsWebSocket.Data, ws: wsWebSocket) => {
-        const msg: IBaseMessage = JSON.parse(rawMsg.valueOf().toString()) as IBaseMessage;
-
-        if (msg.clientId == 0) {
-            // new client, needs an ID assigned
-        }
-
-        // TODO add validation that the message type is actually what it claims to be.
-        // TODO add handling of null fields - typeguards only handle undefined (i.e. structure)
-        switch (msg.messageType) {
-            case "chatMessage":
-                this.handleChatMessage(msg as IFromClientChatMessage, ws);
-                break;
-            case "clientIntro":
-                // TODO think of how we want to handle this.
-                throw new Error("This client has already introduced itself");
-            case "joinLeaveRequest":
-                this.handleJoinLeaveRequest(msg as IClientJoinLeaveRequest);
-                break;
-            case "registration":
-            case "baseMessage":
-            case "serverChatMessage":
-                throw new Error(`Invalid Message Type ${msg.messageType}`);
-            default:
-                throw new InvalidMessageError(msg.messageType);
-        }
-
-        if (!isBaseMessage(msg)) {
-            ws.send(JSON.stringify(ServerStatusMessages.invalidMessageReceived));
-            console.log(ServerStatusMessages.invalidMessageReceived);
-            return;
-        }
-        // console.log(`${msg.time}\t${msg.clientId} to ${msg.chatroom}: ${msg.content}`);
-    }
-
     // TODO handle the case where the client impersonates someone else by making up the clientId (on a clientChatMessage)
     handleChatMessage(msg: IFromClientChatMessage, ws: wsWebSocket) {
         // For now we're just gunna echo the message back to the client, but as a IFromServerChatMessage
-        this.chatrooms
+        const thisChatroom = this.chatrooms.get(msg.chatroom);
+        const prevMsgId = thisChatroom.getLastMessageId();
         const echoMsg: IFromServerChatMessage = {
             messageType: "serverChatMessage",
             chatroom: msg.chatroom,
             clientId: msg.clientId,
             username: "Dummy Username",
             content: msg.content,
-            messageId: this.chatrooms.get(msg.chatroom).getLastMessageId(),
+            messageId: prevMsgId,
             serverTimestamp: new Date()
         }
         ws.send(JSON.stringify(echoMsg));
