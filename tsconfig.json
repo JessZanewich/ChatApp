@@ -8,7 +8,7 @@
         "allowSyntheticDefaultImports": true,
         "noErrorTruncation": true,
         "noUnusedLocals": true,
-        "target": "es6",
+        "target": "esnext",
         "outDir": "./build",
         "jsx": "react"
     },
