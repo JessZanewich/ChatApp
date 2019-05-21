@@ -41,7 +41,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 			const testMessage: Message = {
 				"sender": this.props.clientName,
 				"time": new Date().toISOString(),
-				"content": `${this.props.clientName} Online.`, // TODO figure out how to make the client have a unique name. The server should assign it a name. Maybe we do this when we set up user auth, and for now we just trust that every client is who they say they are in the "sender" field
+				"content": `${this.props.clientName} Online.`,
 				"chatroom": "general"
 			}
 			const testMessageString: string = JSON.stringify(testMessage);
@@ -75,14 +75,11 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 	}
 
 	render() {
-		return( // Note: whatever is returned by the Component.render() method MUST be wrapped in a div or some other element, so that you're only returning a single top-level element
+		return(
 			<div>
-				{/* TODO make it so that you can also hit Enter to send the message (we shouldn't have to just click the Send button) */}
-				{/* <input type="text" onChange={this.onInputChange}/> */}
 				<p>Your message here:</p>
 				<br/>
 				<TextField
-					// fullWidth={true}
 					outlined={true}
 					label={`${this.props.clientName}:`}
 					helperText={<HelperText>This is the helper text</HelperText>}
