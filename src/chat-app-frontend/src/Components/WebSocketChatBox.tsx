@@ -16,9 +16,10 @@ interface WebSocketWrapperProps {
 	websocketServerUrl: string;
 }
 
+const ENTER_KEY = 13;
+
 export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocketWrapperState> {
 	state: WebSocketWrapperState;
-	const ENTER_KEY_CODE = 13;
 
 	// TODO - make it so you don't have to refresh the whole webpage to reconnect if the server is restarted
 	constructor(props: WebSocketWrapperProps) {
@@ -59,7 +60,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 	}
 
 	onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-		if(event.keyCode === ENTER_KEY_CODE) {
+		if(event.keyCode === ENTER_KEY) {
 			this.onClickSend();
 		}
 	}
