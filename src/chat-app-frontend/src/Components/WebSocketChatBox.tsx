@@ -58,7 +58,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 	}
 
 	onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-		if(event.keyCode === 13) {
+		if(event.keyCode === ENTER_KEY_CODE) {
 			this.onClickSend();
 		}
 	}
