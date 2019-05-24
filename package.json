@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/main.js",
   "scripts": {
-    "start": "./build/main.js",
+    "server": "node ./build/backend/main.js",
     "test": "mocha --watch"
   },
   "repository": {
