@@ -13,7 +13,7 @@ interface WebSocketWrapperState {
 }
 
 interface WebSocketWrapperProps {
-	clientName: string;
+	clientId: number;
 	websocketServerUrl: string;
 }
 
@@ -45,9 +45,9 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 
 		this.state.websocket.onopen = () => {
 			const introMessage: IClientIntroductionMessage = {
-				messageType: "clientIntro",
-				clientId: 0,
-				previousMessageId: this.state.receivedMessageHistory.length
+				"clientId": this.props.clientId,
+				"messageType": "clientIntro",
+				"previousMessageId": 0
 			}
 			const testMessageString: string = JSON.stringify(introMessage);
 			this.state.websocket.send(testMessageString);
@@ -87,16 +87,13 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 	}
 
 	render() {
-		return( // Note: whatever is returned by the Component.render() method MUST be wrapped in a div or some other element, so that you're only returning a single top-level element
+		return(
 			<div>
-				{/* TODO make it so that you can also hit Enter to send the message (we shouldn't have to just click the Send button) */}
-				{/* <input type="text" onChange={this.onInputChange}/> */}
 				<p>Your message here:</p>
 				<br/>
 				<TextField
-					// fullWidth={true}
 					outlined={true}
-					label={`${this.props.clientName}:`}
+					label={`${this.props.clientId}:`}
 					helperText={<HelperText>This is the helper text</HelperText>}
 					onTrailingIconSelect={() => this.setState({ clientMessage: "" })}
 					trailingIcon={<MaterialIcon role="button" icon="clear" />}

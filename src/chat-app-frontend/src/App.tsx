@@ -20,8 +20,8 @@ class App extends Component<{}, MyAppState> {
 	state: MyAppState;
 	private websocketUrl: string = "ws://localhost:8999";
 
-	constructor() {
-		super({});
+	constructor(props: any) {
+		super(props);
 
 		this.state = {...INITIAL_APP_STATE};
 	}
@@ -35,8 +35,9 @@ class App extends Component<{}, MyAppState> {
 	render() {
 		return (
 			<div className="App">
-			{/* TODO make clientName dynamic. Eventually it'll be set automatically by the user auth process, but for now just make it be a textbox with a default */}
-				<WebSocketChatBox websocketServerUrl={this.websocketUrl} clientName="John Wick"/> 
+				<WebSocketChatBox
+				websocketServerUrl={this.websocketUrl}
+				clientId={0}/>
 				<br />
 				<Button
 					raised
