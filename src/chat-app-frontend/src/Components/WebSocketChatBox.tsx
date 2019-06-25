@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import {Message} from '../../../interfaces';
+import { IFromClientChatMessage, IFromServerChatMessage, IClientIntroductionMessage } from '../../../interfaces';
 import Button from '@material/react-button';
 import TextField, { HelperText, Input } from '@material/react-text-field';
 import MaterialIcon from '@material/react-material-icon';
 
 interface WebSocketWrapperState {
+	clientId: number;
 	websocket: WebSocket;
 	clientMessage: string;
-	receivedMessageHistory: string;
+	receivedMessageHistory: IFromServerChatMessage[];
 	chatroom: string;
 }
 
@@ -23,17 +24,20 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 	constructor(props: WebSocketWrapperProps) {
 		super(props);
 		this.state = {
+			clientId: 0,
 			websocket: new WebSocket(props.websocketServerUrl),
 			clientMessage: "",
-			receivedMessageHistory: "",
+			receivedMessageHistory: [],
 			chatroom: "general" // TODO - make this settable via a dropdown UI element or something.
 		};
 		
 		this.state.websocket.onmessage = (event) => this.setState((previousState) => {
+			console.log(`Received message: ${event.data}`);
 			//! This is a terrible inefficient way to setState because it copies the entire message history (plus all other properties of state) every time a new message comes in.
 			// TODO figure out a more efficient way to do this setState.
 			let newState = {...previousState};
-			newState.receivedMessageHistory += event.data;
+			const parsedMsg = JSON.parse(event.data) as IFromServerChatMessage;
+			newState.receivedMessageHistory.push(parsedMsg);
 			return newState;
 		});
 
@@ -44,7 +48,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 				"content": `${this.props.clientName} Online.`,
 				"chatroom": "general"
 			}
-			const testMessageString: string = JSON.stringify(testMessage);
+			const testMessageString: string = JSON.stringify(introMessage);
 			this.state.websocket.send(testMessageString);
 			console.log(`Sent message: ${testMessageString}`);
 		}
@@ -63,11 +67,12 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 			return;
 		}
 		console.log(`Sending message: ${this.state.clientMessage}`);
-		const msg: Message = {
-			sender: this.props.clientName,
+		const msg: IFromClientChatMessage = {
+			messageType: "chatMessage",
+			clientId: this.state.clientId,
 			content: this.state.clientMessage,
-			time: new Date().toISOString(),
-			chatroom: this.state.chatroom
+			chatroom: this.state.chatroom,
+			previousMessageId: this.state.receivedMessageHistory.length
 		}
 		const msgString = JSON.stringify(msg);
 		this.state.websocket.send(msgString);
