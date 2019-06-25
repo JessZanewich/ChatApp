@@ -13,7 +13,7 @@ interface WebSocketWrapperState {
 }
 
 interface WebSocketWrapperProps {
-	clientName: string;
+	clientId: number;
 	websocketServerUrl: string;
 }
 
@@ -42,11 +42,10 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 		});
 
 		this.state.websocket.onopen = () => {
-			const testMessage: Message = {
-				"sender": this.props.clientName,
-				"time": new Date().toISOString(),
-				"content": `${this.props.clientName} Online.`,
-				"chatroom": "general"
+			const introMessage: IClientIntroductionMessage = {
+				"clientId": this.props.clientId,
+				"messageType": "clientIntro",
+				"previousMessageId": 0
 			}
 			const testMessageString: string = JSON.stringify(introMessage);
 			this.state.websocket.send(testMessageString);
@@ -86,7 +85,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 				<br/>
 				<TextField
 					outlined={true}
-					label={`${this.props.clientName}:`}
+					label={`${this.props.clientId}:`}
 					helperText={<HelperText>This is the helper text</HelperText>}
 					onTrailingIconSelect={() => this.setState({ clientMessage: "" })}
 					trailingIcon={<MaterialIcon role="button" icon="clear" />}
