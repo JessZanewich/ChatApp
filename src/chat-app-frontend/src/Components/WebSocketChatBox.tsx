@@ -40,6 +40,19 @@ export class WebSocketChatBox extends Component<ChatBoxProps, ChatBoxState> {
 			this.props.handleMessageSend(this.state.chatMessage);
 			this.setState({chatMessage: ""});
 		}
+		
+		const msg: IFromClientChatMessage = {
+			messageType: "chatMessage",
+			clientId: this.state.clientId,
+			content: this.state.clientMessage,
+			chatroom: this.state.chatroom,
+			previousMessageId: this.state.receivedMessageHistory.length
+		}
+		
+		const msgString = JSON.stringify(msg);
+		console.log(`Sending message: ${msgString}`);
+		this.state.websocket.send(msgString);
+		this.setState({clientMessage: ""})
 	}
 	
 	render() {

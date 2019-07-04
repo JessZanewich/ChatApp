@@ -11,6 +11,7 @@ export class Chatroom {
         this.chatroomName = chatroomName;
         this.users = new Map<clientId, wsWebSocket>();
         this.latestMessageId = 0;
+        this.messageHistory = [];
     }
 
     addUser(clientId: clientId, ws: wsWebSocket) {
@@ -31,7 +32,7 @@ export class Chatroom {
         return this.latestMessageId;
     }
 
-    sendMessage(msg: IFromServerChatMessage) {
+    broadcastMessage(msg: IFromServerChatMessage) {
         this.messageHistory.push(msg);
 
         // TODO add error handling for failed .send
