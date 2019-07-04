@@ -73,7 +73,7 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 			alert("No blank messages.");
 			return;
 		}
-		console.log(`Sending message: ${this.state.clientMessage}`);
+		
 		const msg: IFromClientChatMessage = {
 			messageType: "chatMessage",
 			clientId: this.state.clientId,
@@ -81,7 +81,9 @@ export class WebSocketChatBox extends Component<WebSocketWrapperProps, WebSocket
 			chatroom: this.state.chatroom,
 			previousMessageId: this.state.receivedMessageHistory.length
 		}
+		
 		const msgString = JSON.stringify(msg);
+		console.log(`Sending message: ${msgString}`);
 		this.state.websocket.send(msgString);
 		this.setState({clientMessage: ""})
 	}
