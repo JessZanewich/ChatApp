@@ -1,10 +1,10 @@
 import 'typeface-roboto';
 import React, { Component } from 'react';
-import './App.css';
-import { WebSocketChatBox } from './Components/WebSocketChatBox';
-import Button from '@material/react-button';
 import '@material/react-button/dist/button.css';
 import '@material/react-text-field/dist/text-field.css';
+import Button from '@material/react-button';
+import { WebSocketChat } from './Components/WebSocketChat';
+import './App.css';
 
 interface MyAppState {
 	isChatBoxVisisble: boolean;
@@ -35,9 +35,9 @@ class App extends Component<{}, MyAppState> {
 	render() {
 		return (
 			<div className="App">
-				<WebSocketChatBox
-				websocketServerUrl={this.websocketUrl}
-				clientId={0}/>
+				<WebSocketChat
+					websocketServerUrl={this.websocketUrl}
+					clientId={0}/>
 				<br />
 				<Button
 					raised
