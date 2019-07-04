@@ -105,6 +105,25 @@ export class ChatAppServer {
         ws.send(JSON.stringify(regMsg));
     }
 
+    handleClientIntroMessage(msg: IClientIntroductionMessage, ws: wsWebSocket) {
+        let regMsg: IServerRegistrationMessage = {
+            clientId: msg.clientId,
+            chatrooms: Array.from(this.chatrooms.keys()), // For now, just subscribe them to all the chatrooms
+            messageType: "registration"
+        }
+
+        if (msg.clientId === 0) {
+            // Client doesn't have an ID so we must assign it one (which was already created at onConnection time)
+            const newClientId = this.numClients++;
+            regMsg.clientId = newClientId;
+        }
+
+        // Add client to chatroom
+        this.chatrooms.get('general').addUser(regMsg.clientId, ws);
+        // Create a client object
+        this.clients[msg.clientId] = new Client(ws);
+    }
+
     // TODO handle the case where the client impersonates someone else by making up the clientId (on a clientChatMessage)
     handleChatMessage(msg: IFromClientChatMessage, ws: wsWebSocket) {
         // For now we're just gunna echo the message back to the client, but as a IFromServerChatMessage
