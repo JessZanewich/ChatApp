@@ -28,8 +28,7 @@ export class WebSocketChatBox extends Component<ChatBoxProps, ChatBoxState> {
 	
 	onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if(event.keyCode === ENTER_KEY) {
-			this.props.handleMessageSend(this.state.chatMessage);
-			this.setState({chatMessage: ""});
+			this.onMessageSend();
 		}
 	}
 	
@@ -42,27 +41,33 @@ export class WebSocketChatBox extends Component<ChatBoxProps, ChatBoxState> {
 			this.setState({chatMessage: ""});
 		}
 	}
+	
 	render() {
 		return(
-			<div>
+			<>
 				<TextField
 					outlined={true}
 					label={'Message Box'}
 					helperText={<HelperText>This is the helper text</HelperText>}
 					onTrailingIconSelect={() => this.setState({ chatMessage: '' })}
-					trailingIcon={<MaterialIcon role="button" icon="clear" />}>
+					trailingIcon={<MaterialIcon role="button" icon="clear"/>}
+				>
 					<Input
 						value={this.state.chatMessage}
 						onChange={this.handleInputChange} 
-						onKeyDown={this.onKeyDown} />
+						onKeyDown={this.onKeyDown}
+					/>
+					
 				</TextField>
+				
 				<Button
 					raised
 					color="primary"
-					onClick={this.onMessageSend}>
+					onClick={this.onMessageSend}
+				>
 					Send
 				</Button>
-			</div>
+			</>
 		);
 	}
 }

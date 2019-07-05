@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { IFromClientChatMessage, IFromServerChatMessage, IClientIntroductionMessage } from '../../../interfaces';
 import { WebSocketChatBox } from './WebSocketChatBox';
-import { handleMessage } from '../../../backend/handlers';
 
 interface WebSocketWrapperState {
 	clientId: number;
 	websocket: WebSocket;
 	receivedMessageHistory: IFromServerChatMessage[];
+	sentMessageHistory: IFromClientChatMessage[];
 	chatroom: string;
 }
 
@@ -24,7 +24,8 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 		this.state = {
 			clientId: 0,
 			websocket: new WebSocket(props.websocketServerUrl),
-			receivedMessageHistory: [],
+			receivedMessageHistory: [], // TODO - add all messages that the server sends to this array as they are sent
+			sentMessageHistory: [], // TODO - add messages that the client sends to this array as they are sent
 			chatroom: "general" // TODO - make this settable via a dropdown UI element or something.
 		};
 		
@@ -50,11 +51,7 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 		}
 	}
 
-	handleMessage = (chatMessage: string) => {
-		if (chatMessage.length === 0) {
-			alert("No blank messages.");
-			return;
-		}
+	handleMessageSend = (chatMessage: string) => {
 		console.log(`Sending message: ${chatMessage}`);
 		const msg: IFromClientChatMessage = {
 			messageType: "chatMessage",
@@ -63,18 +60,27 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 			chatroom: this.state.chatroom,
 			previousMessageId: this.state.receivedMessageHistory.length
 		}
+
 		const msgString = JSON.stringify(msg);
 		console.log(msgString);
 
+		this.setState(previousState => {
+			let sentHistory = previousState.sentMessageHistory;
+			sentHistory.push(msg);
+
+			return {
+				sentMessageHistory: sentHistory
+			}
+		})
 		this.state.websocket.send(msgString);
 	}
 
 	render() {
 		return(
-			<div>
+			<>
                 <WebSocketChatBox
-					handleMessageSend={this.handleMessage} />
-			</div>
+					handleMessageSend={this.handleMessageSend} />
+			</>
 		);
 	}
 }

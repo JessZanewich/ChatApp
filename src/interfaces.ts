@@ -15,11 +15,6 @@ export interface IFromClientChatMessage extends IFromClientMessage {
     chatroom: string; // GUID for chat room
 }
 
-// Should never be sent or received
-export interface ITimestampedClientMessage extends IFromClientMessage {
-    time: Date;
-}
-
 export interface IClientJoinLeaveRequest extends IBaseMessage {
     messageType: "joinLeaveRequest";
     isJoiningOrLeaving?: "joining" | "leaving";
