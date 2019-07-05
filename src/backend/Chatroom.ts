@@ -36,8 +36,11 @@ export class Chatroom {
         this.messageHistory.push(msg);
 
         // TODO add error handling for failed .send
-        this.users.forEach((ws: wsWebSocket) => {
-            ws.send(msg);
-        });
+        for (const clientId in this.users) {
+            if (this.users.hasOwnProperty(clientId)) {
+                const ws: wsWebSocket = this.users[clientId];
+                ws.send(JSON.stringify(msg));
+            }
+        }
     }
 }
