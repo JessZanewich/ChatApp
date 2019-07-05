@@ -35,7 +35,7 @@ export class ChatAppServer {
             console.log(`Server: incoming connection!`);
         
             ws.on('close', (code, reason) => {
-                // dissociate client ID and ws (by deleting the ws value associated with the clientId key in the map)
+                // TODO - dissociate client ID and ws (by deleting the ws value associated with the clientId key in the map)
                 console.log(`Client disconnected: ${code} reason = '${reason}'`);
             });
 
@@ -83,7 +83,6 @@ export class ChatAppServer {
         let portToUse = process.env.PORT || 8999; // env var used by Heroku, ifndef then use defined port number
         await this.server.listen(portToUse);
         console.log(`Server activated, now listening on port ${portToUse}`);
-        
     }
 
     handleClientIntroMessage(msg: IClientIntroductionMessage, ws: wsWebSocket) {
@@ -103,6 +102,7 @@ export class ChatAppServer {
         this.chatrooms.get('general').addUser(regMsg.clientId, ws);
         // Create a client object
         this.clients[msg.clientId] = new Client(ws);
+        ws.send(JSON.stringify(regMsg));
     }
 
     // TODO handle the case where the client impersonates someone else by making up the clientId (on a clientChatMessage)
