@@ -23,7 +23,7 @@ class App extends Component<{}, MyAppState> {
 	constructor(props: any) {
 		super(props);
 
-		this.state = {...INITIAL_APP_STATE};
+		this.state = INITIAL_APP_STATE;
 	}
 
 	onDisconnect = () => {
