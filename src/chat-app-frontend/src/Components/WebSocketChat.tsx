@@ -31,12 +31,12 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 		
 		this.state.websocket.onmessage = (event) => this.setState((previousState) => {
 			console.log(`Received message: ${event.data}`);
-			//! This is a terrible inefficient way to setState because it copies the entire message history (plus all other properties of state) every time a new message comes in.
-			// TODO figure out a more efficient way to do this setState.
-			let newState = {...previousState};
+			let newMsgHistory = previousState.receivedMessageHistory;
 			const parsedMsg = JSON.parse(event.data) as IFromServerChatMessage;
-			newState.receivedMessageHistory.push(parsedMsg);
-			return newState;
+			newMsgHistory.push(parsedMsg);
+			return {
+				receivedMessageHistory: newMsgHistory
+			};
 		});
 
 		this.state.websocket.onopen = () => {
@@ -44,7 +44,7 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 				"clientId": this.props.clientId,
 				"messageType": "clientIntro",
 				"previousMessageId": 0
-			}
+			};
 			const testMessageString: string = JSON.stringify(introMessage);
 			this.state.websocket.send(testMessageString);
 			console.log(`Sent message: ${testMessageString}`);
