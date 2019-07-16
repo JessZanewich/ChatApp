@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { IFromClientChatMessage, IFromServerChatMessage, IClientIntroductionMessage } from '../../../interfaces';
 import { WebSocketChatBox } from './WebSocketChatBox';
+import { MessageList } from './MessageList';
 
 interface WebSocketWrapperState {
 	clientId: number;
@@ -78,6 +79,7 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 	render() {
 		return(
 			<>
+				<MessageList />
                 <WebSocketChatBox
 					handleMessageSend={this.handleMessageSend} />
 			</>
