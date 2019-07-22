@@ -50,9 +50,13 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 			this.state.websocket.send(testMessageString);
 			console.log(`Sent message: ${testMessageString}`);
 		}
+		this.state.websocket.onclose = () => {
+			console.log("web socket has closed");
+		}
 	}
 
 	handleMessageSend = (chatMessage: string) => {
+		console.log(this.state.receivedMessageHistory);
 		console.log(`Sending message: ${chatMessage}`);
 		const msg: IFromClientChatMessage = {
 			messageType: "chatMessage",
@@ -79,7 +83,8 @@ export class WebSocketChat extends Component<WebSocketWrapperProps, WebSocketWra
 	render() {
 		return(
 			<>
-				<MessageList />
+				<MessageList 
+					messages={this.state.receivedMessageHistory}/>
                 <WebSocketChatBox
 					handleMessageSend={this.handleMessageSend} />
 			</>
